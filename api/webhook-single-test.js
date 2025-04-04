@@ -1,10 +1,12 @@
+
+// LINE Webhook Handler (Single file test version)
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
   const events = req.body.events || [];
 
   for (const event of events) {
-    // ✅ กรณีบอทถูกเชิญเข้าห้อง LINE
+    // ตอบกลับเมื่อบอทถูกเชิญเข้าห้อง
     if (event.type === 'join' && event.source?.groupId) {
       await fetch('https://api.line.me/v2/bot/message/push', {
         method: 'POST',
@@ -17,15 +19,15 @@ export default async function handler(req, res) {
           messages: [
             {
               type: 'text',
-              text: `👥 Group ID นี้คือ:\n${event.source.groupId}`
+              text: '🤖 Bot Online แล้วจ้า!'
             }
           ]
         })
       });
     }
 
-    // ✅ พิมพ์ว่า "เมนูผู้ดูแล" แล้วแสดงเมนู
-    if (event.type === 'message' && event.message?.text === 'เมนูผู้ดูแล') {
+    // ตอบกลับเมื่อมีคนพิมพ์คำว่า test
+    if (event.type === 'message' && event.message?.text.toLowerCase().includes('test')) {
       await fetch('https://api.line.me/v2/bot/message/reply', {
         method: 'POST',
         headers: {
@@ -37,7 +39,7 @@ export default async function handler(req, res) {
           messages: [
             {
               type: 'text',
-              text: '📋 เมนูผู้ดูแลระบบ: จัดการอุปกรณ์, ดูภาพ, แบบฟอร์มตรวจสอบ, ส่งออก PDF, ตั้งค่าบอท'
+              text: '✅ Webhook ทำงาน OK แล้ว!'
             }
           ]
         })
